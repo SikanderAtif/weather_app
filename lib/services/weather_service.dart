@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 
 class WeatherService {
-  Future<Weather> fetchWeather(String city) async {
+  static Future<Weather> fetchWeather(String city) async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -27,7 +27,7 @@ class WeatherService {
     }
   }
 
-  Future<Forecast> fetchForecast(String city) async {
+  static Future<Forecast> fetchForecast(String city) async {
     try {
       final response = await http.get(
         Uri.parse(
