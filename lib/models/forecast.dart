@@ -1,8 +1,8 @@
-class ForecastItem {
+class ForecastHelper {
   final num date, high, low;
   final String condition;
 
-  const ForecastItem({
+  const ForecastHelper({
     required this.date,
     required this.high,
     required this.low,
@@ -11,7 +11,7 @@ class ForecastItem {
 }
 
 class Forecast {
-  final List<ForecastItem> forecast;
+  final List<ForecastHelper> forecast;
 
   const Forecast({required this.forecast});
 
@@ -25,7 +25,7 @@ class Forecast {
               'main': {'temp_min': num low, 'temp_max': num high},
               'weather': [{'main': String condition}, ...],
             })
-              ForecastItem(
+              ForecastHelper(
                 date: date,
                 high: high,
                 low: low,

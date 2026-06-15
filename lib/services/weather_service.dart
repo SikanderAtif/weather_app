@@ -6,6 +6,10 @@ import 'dart:convert';
 import 'dart:io';
 
 class WeatherService {
+  static Future<List<dynamic>> fetchWeatherForecast(String city) async {
+    return Future.wait([fetchWeather(city), fetchForecast(city)]);
+  }
+
   static Future<Weather> fetchWeather(String city) async {
     try {
       final response = await http.get(
@@ -54,4 +58,7 @@ class ServiceException implements Exception {
   final int durationSeconds;
 
   ServiceException(this.message, this.durationSeconds);
+
+  @override
+  String toString() => message;
 }

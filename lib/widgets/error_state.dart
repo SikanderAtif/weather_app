@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ErrorState extends StatelessWidget {
-  const ErrorState ({super.key});
+  final String error;
+  const ErrorState ({super.key, required this.error});
 
   @override
   Widget build(BuildContext context) {
-    return Text('error');
+    return Center(
+      child: Text('An error occurred: $error'),
+    );
   }
 }

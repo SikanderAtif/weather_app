@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/weather.dart';
-import 'package:weather_app/models/forecast.dart';
 import 'package:weather_app/services/weather_service.dart';
+import 'weather_screen.dart';
 import 'package:weather_app/widgets/loading_state.dart';
 import 'package:weather_app/widgets/error_state.dart';
-import 'package:weather_app/widgets/current_weather_card.dart';
 
 class SearchScreen extends StatefulWidget {
   final String title;
@@ -21,7 +19,6 @@ class _SearchScreenState extends State<SearchScreen> {
   void _search() {
     String city = _controller.text.trim();
     if (city.isEmpty) return;
-    print("City: $city");
 
     _searchQueryNotifier.value = city;
   }
@@ -36,7 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(title: Text(widget.title), centerTitle: true, backgroundColor: Theme.of(context).colorScheme.inversePrimary),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -68,19 +65,29 @@ class _SearchScreenState extends State<SearchScreen> {
                     return const Text('Start typing to search for a city.');
                   }
 
-                  return FutureBuilder<Weather>(
-                    future: WeatherService.fetchWeather(query),
+                  return FutureBuilder<dynamic>(
+                    future: WeatherService.fetchWeatherForecast(query),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return LoadingState();
                       }
 
-                      if (snapshot.hasError) {
-                        return ErrorState();
-                      }
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasError) {
+                          return ErrorState(error: snapshot.error.toString());
+                        }
 
-                      if (snapshot.hasData) {
-                        return CurrentWeatherCard();
+                        if (snapshot.hasData) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    WeatherScreen(weather: snapshot.data[0]!, forecast: snapshot.data[1]!),
+                              ),
+                            );
+                          });
+                        }
                       }
 
                       return SizedBox.shrink();
