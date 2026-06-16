@@ -14,7 +14,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
-  final ValueNotifier<String> _searchQueryNotifier = ValueNotifier<String>('');
+  final ValueNotifier<String?> _searchQueryNotifier = ValueNotifier<String?>(null);
 
   void _search() {
     String city = _controller.text.trim();
@@ -33,7 +33,11 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title), centerTitle: true, backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      appBar: AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -58,10 +62,10 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             SizedBox(height: 24),
             Expanded(
-              child: ValueListenableBuilder<String>(
+              child: ValueListenableBuilder<String?>(
                 valueListenable: _searchQueryNotifier,
                 builder: (context, query, _) {
-                  if (query.isEmpty) {
+                  if (query == null) {
                     return const Text('Start typing to search for a city.');
                   }
 
@@ -82,10 +86,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    WeatherScreen(weather: snapshot.data[0]!, forecast: snapshot.data[1]!),
+                                builder: (context) => WeatherScreen(
+                                  weather: snapshot.data[0]!,
+                                  forecast: snapshot.data[1]!,
+                                ),
                               ),
                             );
+                            _searchQueryNotifier.value = null;
                           });
                         }
                       }
