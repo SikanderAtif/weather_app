@@ -16,25 +16,27 @@ class Forecast {
   const Forecast({required this.forecast});
 
   factory Forecast.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {'list': List items} => Forecast(
-        forecast: [
-          for (final item in items)
-            if (item case {
-              'dt': num date,
-              'main': {'temp_min': num low, 'temp_max': num high},
-              'weather': [{'main': String condition}, ...],
-            })
-              ForecastHelper(
-                date: date,
-                high: high,
-                low: low,
-                condition: condition,
-              ),
-        ],
-      ),
+    List<ForecastHelper> result = [];
+    dynamic list = json['list'];
 
-      _ => throw const FormatException('Failed to load forecast data.'),
-    };
+    for (final item in list) {
+      num date = item['dt'];
+      Map<String, dynamic> main = item['main'];
+      num minTemp = main['temp_min'];
+      num maxTemp = main['temp_max'];
+      Map<String, dynamic> weather = (item['weather'][0]);
+      String weatherMain = weather['main'];
+
+      result.add(
+        ForecastHelper(
+          date: date,
+          high: maxTemp,
+          low: minTemp,
+          condition: weatherMain,
+        ),
+      );
+    }
+
+    return Forecast(forecast: result);
   }
 }

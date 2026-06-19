@@ -5,78 +5,65 @@ class ForecastItem extends StatelessWidget {
   final Forecast _forecast;
   const ForecastItem({super.key, required this._forecast});
 
+  String _getDate(int index) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(
+      _forecast.forecast[index].date.toInt() * 1000,
+    );
+    String year = date.year.toString();
+    String month = date.month.toString();
+    String day = date.day.toString();
+
+    return '$year-$month-$day';
+  }
+
+  String _getTime(int index) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(
+      _forecast.forecast[index].date.toInt() * 1000,
+    );
+    String hour = date.hour.toString();
+    String min = date.minute.toString();
+    String sec = date.second.toString();
+
+    return '$hour:$min:$sec';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView(
         children: [
-          ListTile(
-            isThreeLine: true,
-            title: Text(
-              '${DateTime.fromMillisecondsSinceEpoch(_forecast.forecast[0].date.toInt() * 1000)}',
+          for (int i = 0; i < _forecast.forecast.length;)
+            ListTile(
+              title: Text(
+                _getDate(i),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              subtitle: SizedBox(
+                height: 100, 
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    for (int j = i; i < _forecast.forecast.length && _getDate(i) == _getDate(j); i++)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 32.0, top: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _getTime(i),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('Condition: ${_forecast.forecast[i].condition}'),
+                            Text('High: ${_forecast.forecast[i].high}'),
+                            Text('Low: ${_forecast.forecast[i].low}'),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
-            subtitle: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Condition\n${_forecast.forecast[0].condition}'),
-                Text('High Temp\n${_forecast.forecast[0].high}'),
-                Text('Low Temp\n${_forecast.forecast[0].low}'),
-              ],
-            ),
-          ),
-          ListTile(
-            isThreeLine: true,
-            title: Text('${DateTime.fromMillisecondsSinceEpoch(_forecast.forecast[1].date.toInt() * 1000)}'),
-            subtitle: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Condition\n${_forecast.forecast[1].condition}'),
-                Text('High Temp\n${_forecast.forecast[1].high}'),
-                Text('Low Temp\n${_forecast.forecast[1].low}'),
-              ],
-            ),
-          ),
-          ListTile(
-            isThreeLine: true,
-            title: Text('${DateTime.fromMillisecondsSinceEpoch(_forecast.forecast[2].date.toInt() * 1000)}'),
-            subtitle: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Condition\n${_forecast.forecast[2].condition}'),
-                Text('High Temp\n${_forecast.forecast[2].high}'),
-                Text('Low Temp\n${_forecast.forecast[2].low}'),
-              ],
-            ),
-          ),
-          ListTile(
-            isThreeLine: true,
-            title: Text('${DateTime.fromMillisecondsSinceEpoch(_forecast.forecast[3].date.toInt() * 1000)}'),
-            subtitle: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Condition\n${_forecast.forecast[3].condition}'),
-                Text('High Temp\n${_forecast.forecast[3].high}'),
-                Text('Low Temp\n${_forecast.forecast[3].low}'),
-              ],
-            ),
-          ),
-          ListTile(
-            isThreeLine: true,
-            title: Text('${DateTime.fromMillisecondsSinceEpoch(_forecast.forecast[4].date.toInt() * 1000)}'),
-            subtitle: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Condition\n${_forecast.forecast[4].condition}'),
-                Text('High Temp\n${_forecast.forecast[4].high}'),
-                Text('Low Temp\n${_forecast.forecast[4].low}'),
-              ],
-            ),
-          ),
         ],
       ),
     );

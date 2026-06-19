@@ -13,24 +13,15 @@ class Weather {
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        'main': {'temp': num temp, 'humidity': num humidity},
-        'wind': {'speed': num windSpeed},
-        'weather': [{'main': String weatherMain, 'description': String weatherDesc},...],
-        'sys': {'country': String country},
-        'name': String cityName,
-      } =>
-        Weather(
-          temp: temp,
-          windSpeed: windSpeed,
-          humidity: humidity,
-          weatherMain: weatherMain,
-          weatherDesc: weatherDesc,
-          country: country,
-          cityName: cityName,
-        ),
-      _ => throw const FormatException('Failed to load weather information :('),
-    };
+
+    num temp = (json['main'])['temp'];
+    num windSpeed = (json['wind'])['speed'];
+    num humidity = (json['main'])['humidity'];
+    String main = (json['weather'][0])['main'];
+    String desc = (json['weather'][0])['description'];
+    String country = (json['sys'])['country'];
+    String name = json['name'];
+
+    return Weather(temp: temp, windSpeed: windSpeed, humidity: humidity, weatherMain: main, weatherDesc: desc, country: country, cityName: name);
   }
 }
